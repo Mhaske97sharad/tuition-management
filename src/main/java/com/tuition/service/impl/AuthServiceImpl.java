@@ -8,6 +8,8 @@ import com.tuition.repository.StudentRepository;
 import com.tuition.service.AuthService;
 import com.tuition.service.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +32,14 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidCredentialsException("Invalid email or password");
         }
 
-        String token = jwtService.generateToken(student.getEmail());
+        UserDetails userDetails =
+                User.builder()
+                        .username(student.getEmail())
+                        .password(student.getPassword())
+                        .authorities(student.getRole().name())
+                        .build();
+
+        String token = jwtService.generateToken(userDetails);
 
         return LoginResponse.builder()
                 .studentId(student.getId())
