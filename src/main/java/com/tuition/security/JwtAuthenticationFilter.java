@@ -1,5 +1,6 @@
 package com.tuition.security;
 
+import com.tuition.exception.JwtAuthenticationException;
 import com.tuition.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -30,16 +31,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
-        final String authHeader = request.getHeader("Authorization");
+        final String authHeader = request.getHeader(SecurityConstants.AUTH_HEADER);
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith(SecurityConstants.TOKEN_PREFIX)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = authHeader.substring(7);
+        String token = authHeader.substring(SecurityConstants.TOKEN_PREFIX.length());
 
-        String email = jwtService.extractUsername(token);
+        String email;
+
+        try {
+            email = jwtService.extractUsername(token);
+        } catch (Exception e) {
+            throw new JwtAuthenticationException("Invalid or Expired JWT Token");
+        }
 
         if (email != null &&
                 SecurityContextHolder.getContext().getAuthentication() == null) {
