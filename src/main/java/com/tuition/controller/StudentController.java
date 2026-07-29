@@ -24,4 +24,10 @@ public class StudentController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @GetMapping("/profile")
+    public ResponseEntity<String> profile() {
+        return ResponseEntity.ok("Welcome to Student Profile");
+    }
+
 }
