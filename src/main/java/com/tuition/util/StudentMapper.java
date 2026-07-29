@@ -3,6 +3,7 @@ package com.tuition.util;
 import com.tuition.dto.request.StudentRegistrationRequest;
 import com.tuition.dto.response.StudentRegistrationResponse;
 import com.tuition.entity.Student;
+import com.tuition.enums.Role;
 
 public class StudentMapper {
 
@@ -16,6 +17,7 @@ public class StudentMapper {
                 .email(request.getEmail())
                 .password(encodedPassword)
                 .phone(request.getPhone())
+                .role(Role.ROLE_STUDENT)
                 .build();
     }
 

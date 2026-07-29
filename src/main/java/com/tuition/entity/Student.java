@@ -1,5 +1,6 @@
 package com.tuition.entity;
 
+import com.tuition.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,6 +15,10 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 @Builder
 public class Student {
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
